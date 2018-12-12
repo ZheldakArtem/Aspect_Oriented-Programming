@@ -1,0 +1,21 @@
+﻿@model AOP.Samples.Models.FibonacciResult
+
+@{
+	ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+@using (Html.BeginForm())
+{
+	@Html.LabelFor(m => Model.Value);
+	@Html.EditorFor(m => Model.Value);
+	<br />
+
+	@Html.LabelFor(m => Model.Result);
+	@Html.DisplayTextFor(m => Model.Result);
+	<br />
+	
+	<input type="submit" value="Evaluate">
+	<br />
+	@Html.LabelForModel(string.Format("Evaluation time {0}", Model.EvaluationTime));
+}
