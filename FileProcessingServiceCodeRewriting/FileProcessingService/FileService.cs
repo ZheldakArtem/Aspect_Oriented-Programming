@@ -13,44 +13,19 @@ namespace FileProcessingService
 	public class FileService : IDisposable
 	{
 		private readonly FileSystemWatcher watcher;
-		private readonly string inDir;
-		private readonly string outDir;
-		private readonly string outWrongFileNamingDir;
-		private readonly string invalidFileSequenceDir;
 		private readonly Thread workThread;
 		private readonly ManualResetEvent stopWork;
 		private readonly AutoResetEvent newFileEvent;
 		private readonly PdfCreator pdfCreator;
+		private string inDir;
+		private string outDir;
+		private string outWrongFileNamingDir;
+		private string invalidFileSequenceDir;
 		private bool disposed = false;
 
 		public FileService()
 		{
-			var currentDir = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
-
-			this.inDir = Path.Combine(currentDir, "in");
-			this.outDir = Path.Combine(currentDir, "out");
-			this.outWrongFileNamingDir = Path.Combine(currentDir, "wrongFileNamingOut");
-			this.invalidFileSequenceDir = Path.Combine(currentDir, "invalidSequence");
-
-			if (!Directory.Exists(this.inDir))
-			{
-				Directory.CreateDirectory(this.inDir);
-			}
-
-			if (!Directory.Exists(this.outDir))
-			{
-				Directory.CreateDirectory(this.outDir);
-			}
-
-			if (!Directory.Exists(this.outWrongFileNamingDir))
-			{
-				Directory.CreateDirectory(this.outWrongFileNamingDir);
-			}
-
-			if (!Directory.Exists(this.invalidFileSequenceDir))
-			{
-				Directory.CreateDirectory(this.invalidFileSequenceDir);
-			}
+			this.InitiateDirectories();
 
 			this.watcher = new FileSystemWatcher(this.inDir);
 			this.watcher.Created += this.Watcher_Created;
@@ -222,6 +197,36 @@ namespace FileProcessingService
 		private void Watcher_Created(object sender, FileSystemEventArgs e)
 		{
 			this.newFileEvent.Set();
+		}
+
+		private void InitiateDirectories()
+		{
+			var currentDir = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
+
+			this.inDir = Path.Combine(currentDir, "in");
+			this.outDir = Path.Combine(currentDir, "out");
+			this.outWrongFileNamingDir = Path.Combine(currentDir, "wrongFileNamingOut");
+			this.invalidFileSequenceDir = Path.Combine(currentDir, "invalidSequence");
+
+			if (!Directory.Exists(this.inDir))
+			{
+				Directory.CreateDirectory(this.inDir);
+			}
+
+			if (!Directory.Exists(this.outDir))
+			{
+				Directory.CreateDirectory(this.outDir);
+			}
+
+			if (!Directory.Exists(this.outWrongFileNamingDir))
+			{
+				Directory.CreateDirectory(this.outWrongFileNamingDir);
+			}
+
+			if (!Directory.Exists(this.invalidFileSequenceDir))
+			{
+				Directory.CreateDirectory(this.invalidFileSequenceDir);
+			}
 		}
 	}
 }
